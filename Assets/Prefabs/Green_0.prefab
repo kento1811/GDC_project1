@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6956969121560200991}
   - component: {fileID: 8827734682481175470}
   - component: {fileID: 2366563933923413921}
+  - component: {fileID: -5642997077525739395}
   m_Layer: 0
   m_Name: Green_0
   m_TagString: Untagged
@@ -161,3 +162,30 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.21, y: 0.64}
   m_EdgeRadius: 0
+--- !u!114 &-5642997077525739395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2654078462567221247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cebacf19f52e55742bd5a3f5cac2a4e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FishSwim
+  minSpeed: 1.5
+  maxSpeed: 3.5
+  rareChance: 0.2
+  rareSpeedMultiplier: 0.5
+  useCurve: 0
+  curveAmplitude: 0.5
+  curveFrequency: 2
+  moveRight: 1
+  changeDirChance: 0.3
+  minChangeTime: 2
+  maxChangeTime: 5
+  minX: 0
+  maxX: 0
+  minY: 0
+  maxY: 0

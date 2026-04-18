@@ -9,7 +9,7 @@ public class FishSwim : MonoBehaviour
 
     [Header("Rare Fish")]
     [Range(0f, 1f)] public float rareChance = 0.2f;
-    public float rareSpeedMultiplier = 0.5f;
+    public float rareSpeedMultiplier = 0.5f; // cá hiếm chậm hơn
 
     [Header("Movement")]
     public bool useCurve;
@@ -20,23 +20,24 @@ public class FishSwim : MonoBehaviour
     public bool moveRight = true;
 
     [Header("Direction Change")]
-    public float changeDirChance = 0.3f;
+    public float changeDirChance = 0.3f; // xác suất đổi hướng
     public float minChangeTime = 2f;
     public float maxChangeTime = 5f;
     private float changeTimer;
 
     [Header("Bounds")]
-    public float minX;
-    public float maxX;
-    public float minY;
-    public float maxY;
+    public float minX = -10f;
+    public float maxX = 10f;
+    public float minY = -5f;
+    public float maxY = 1f;
 
-    private float baseY;
+    private float startY;
     private float timeOffset;
     private bool isRare = false;
 
     void Start()
     {
+        // random speed
         speed = Random.Range(minSpeed, maxSpeed);
 
         // cá hiếm
@@ -46,11 +47,16 @@ public class FishSwim : MonoBehaviour
             speed *= rareSpeedMultiplier;
         }
 
+        // random kiểu bơi
         useCurve = Random.value > 0.5f;
 
+        // random hướng
+        moveRight = Random.value > 0.5f;
+
+        // timer đổi hướng
         changeTimer = Random.Range(minChangeTime, maxChangeTime);
 
-        baseY = transform.position.y;
+        startY = transform.position.y;
         timeOffset = Random.Range(0f, 100f);
 
         Flip();
@@ -67,27 +73,23 @@ public class FishSwim : MonoBehaviour
     {
         float dir = moveRight ? 1 : -1;
 
-        float newX = transform.position.x + dir * speed * Time.deltaTime;
-        float newY = transform.position.y;
+        // di chuyển ngang
+        transform.Translate(Vector2.right * dir * speed * Time.deltaTime);
 
+        // bơi cong
         if (useCurve)
         {
             float yOffset = Mathf.Sin(Time.time * curveFrequency + timeOffset) * curveAmplitude;
-            newY = Mathf.Clamp(baseY + yOffset, minY, maxY);
+            float newY = Mathf.Clamp(startY + yOffset, minY, maxY);
+            transform.position = new Vector2(transform.position.x, newY);
         }
-
-        transform.position = new Vector2(newX, newY);
     }
 
     void ChangeDirection()
     {
         changeTimer -= Time.deltaTime;
 
-        // ❗ CHỈ cho đổi hướng khi còn trong màn hình
-        if (changeTimer <= 0f &&
-            transform.position.x > minX &&
-            transform.position.x < maxX &&
-            Random.value < changeDirChance)
+        if (changeTimer <= 0f && Random.value < changeDirChance)
         {
             moveRight = !moveRight;
             Flip();
@@ -98,11 +100,10 @@ public class FishSwim : MonoBehaviour
 
     void CheckDestroy()
     {
-        // ra khỏi màn hình thì xoá
-        if (transform.position.x > maxX + 2 ||
-            transform.position.x < minX - 2 ||
-            transform.position.y > maxY + 2 ||
-            transform.position.y < minY - 2)
+        if (transform.position.x > maxX + 1 ||
+            transform.position.x < minX - 1 ||
+            transform.position.y > maxY + 1 ||
+            transform.position.y < minY - 1)
         {
             Destroy(gameObject);
         }
